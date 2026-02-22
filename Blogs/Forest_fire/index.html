@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapping the Progression of Los Angeles Wildfires Using Multi-Temporal Sentinel-1 SAR Coherence</title>
+
+<style>
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    margin: 0;
+    line-height: 1.7;
+    color: #333;
+    background: #f8f9fa;
+}
+
+header {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+header h1 {
+    max-width: 900px;
+    margin: auto;
+    font-size: 28px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 40px 20px;
+    background: white;
+}
+
+h2 {
+    margin-top: 50px;
+    border-left: 5px solid #2a5298;
+    padding-left: 10px;
+    color: #2a5298;
+}
+
+p {
+    text-align: justify;
+}
+
+.figure {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.figure img {
+    max-width: 100%;
+    border-radius: 6px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.caption {
+    font-size: 14px;
+    color: #555;
+    margin-top: 8px;
+}
+
+.equation-box {
+    background: #f1f3f5;
+    padding: 15px;
+    border-radius: 6px;
+    font-family: monospace;
+    overflow-x: auto;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #2a5298;
+    color: white;
+    margin-top: 40px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Mapping the Progression of Los Angeles Wildfires Using Multi-Temporal Sentinel-1 SAR Coherence</h1>
+</header>
+
+<div class="container">
+
+<p>
+This study presents a Synthetic Aperture Radar (SAR)-based methodology for monitoring wildfire progression using multi-temporal coherence derived from Sentinel-1 imagery. Optical satellite data are often limited during active wildfire events due to smoke and cloud cover. In contrast, SAR provides all-weather, day-and-night imaging capability. By analyzing temporal coherence between consecutive Sentinel-1 acquisitions before, during, and after the January 2025 Los Angeles wildfire event, burned areas were detected and temporally sequenced. Coherence layers were combined into an RGB composite to visualize fire spread chronology. The results demonstrate that coherence-based change detection offers a robust and operationally feasible approach for wildfire monitoring and post-disaster assessment.
+</p>
+
+<h2>1. Introduction</h2>
+<p>
+Wildfires represent one of the most destructive environmental hazards, causing rapid landscape transformation, ecosystem degradation, infrastructure loss, and economic damage. Accurate monitoring of wildfire progression is critical for emergency response, environmental impact assessment, and recovery planning. Traditional optical remote sensing approaches rely on vegetation indices such as NDVI and NBR; however, these methods are limited by atmospheric conditions, particularly smoke and cloud cover during active fires. Synthetic Aperture Radar (SAR) overcomes these limitations due to its independence from solar illumination and its ability to penetrate smoke and clouds.
+This research investigates the use of multi-temporal SAR coherence derived from Sentinel-1 C-band data to map wildfire progression in Los Angeles during January 2025. The approach exploits structural changes in vegetation caused by fire, which directly influence interferometric coherence.
+</p>
+
+<h2>2. Study Area and Data</h2>
+
+<div class="figure">
+    <img src="images/study_area.png" alt="Study Area">
+    <div class="caption">Fig1: Palisades Wildfire, Los Angeles, California</div>
+</div>
+
+<p>
+The study area covers wildfire-affected regions of Los Angeles, California, USA. The wildfire event began on January 7, 2025 and was contained on January 31, 2025. The region is characterized by Mediterranean climate conditions, dry vegetation, and complex terrain, making it highly susceptible to wildfire outbreaks.<br>
+Sentinel-1 SAR data acquisitions used in this study:
+
+</p>
+
+<ul>
+<li>28 December 2024 (Pre-fire baseline)</li>
+<li>09 January 2025 (Early fire stage)</li>
+<li>21 January 2025 (Peak expansion stage)</li>
+<li>02 February 2025 (Post-fire stage)</li>
+</ul>
+<div class="figure">
+    <img src="images/data.png" alt="Sentinel-1 Data" style="width:50%; border-radius: 6px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+    <div class="caption">Fig2: Datasets Used in the Study</div>
+</div>
+<h2>3. SAR Coherence Theory</h2>
+<div class="figure">
+    <img src="images/workflow.png" alt="Sentinel-1 Data" style="width:50%; border-radius: 6px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+    <div class="caption">Fig3: Workflow of the Coherence-Based Wildfire Mapping Method</div>
+</div>
+<p>
+SAR coherence measures the similarity between two complex SAR images acquired over the same area at different times. It is defined as the normalized complex cross-correlation between two SAR signals.
+<br>The interferometric coherence (γ) is defined as:
+
+</p>
+
+<div class="equation-box">
+γ = | ⟨ S1 · S2* ⟩ | / √( ⟨ |S1|² ⟩ ⟨ |S2|² ⟩ )
+</div>
+
+<p>
+where S1 and S2 are complex SAR images acquired at two different times, S2* denotes the complex conjugate of S2, and ⟨·⟩ represents spatial averaging.
+<br>Coherence values range between 0 and 1. High coherence (γ ≈ 1) indicates minimal structural change between acquisitions, while low coherence (γ ≈ 0) suggests significant temporal decorrelation.
+<br>In vegetated areas, temporal decorrelation is primarily caused by volumetric scattering. Vegetation structure changes between acquisitions, leading to low coherence. After a wildfire removes vegetation, the surface becomes structurally stable, often resulting in increased coherence.
+<br>Total coherence can be modeled as the product of independent decorrelation components:
+<br>γ_total = γ_temporal · γ_spatial · γ_volume · γ_thermal · γ_processing
+<br>Among these components, temporal decorrelation (γ_temporal) dominates wildfire-affected vegetation changes.
+
+</p>
+
+<h2>4. Methodology</h2>
+<p>The processing workflow was implemented using SARScape within ENVI. The methodology consists of data import, coregistration, coherence estimation, terrain correction, and multi-temporal RGB composition.</p>
+<ul>
+<li>Import Sentinel-1 SLC data into SARScape. </li>
+<div class="figure">
+    <img src="images/w1.png" alt="Import Data">
+    <img src="images/w2.png" alt="Coregistration">
+    <div class="caption">Fig4: Importing Sentinel-1 SLC Data</div>
+</div>
+<li>Perform precise coregistration between consecutive image pairs.</li>
+<li>Estimate coherence using moving window estimation.</li>
+<div class="figure">
+    <img src="images/w3.png" alt="Coherence Estimation">
+    <div class="caption">Fig5: Coherence Estimation Process</div>
+</div>
+</ul>
+<ul>
+<li>Apply terrain correction and geocoding.</li>
+<li>Generate three coherence maps corresponding to different time intervals.</li>
+<li>Stack coherence layers into an RGB composite.</li>
+<div class="figure">
+    <img src="images/rgb.png" alt="Coherence Estimation">
+    <div class="caption">Fig5: Final RGB Composite</div>
+</div>
+</ul>
+
+
+<h2>5. Results and Interpretation</h2>
+
+<p>
+Three coherence layers were generated corresponding to pre-fire to early-fire, early-fire to peak-fire, and peak-fire to post-fire stages. These layers were assigned to the red, green, and blue channels respectively.
+<br>Red-dominant areas indicate early burned zones. Green-dominant areas represent mid-stage fire expansion. Blue-dominant regions correspond to late-stage burned areas. Mixed colors indicate overlapping burn phases.
+<br>The RGB composite effectively reconstructs the chronological fire spread pattern. The approach demonstrates strong potential for rapid wildfire progression mapping independent of atmospheric conditions.
+</p>
+
+
+
+<h2>6. Discussion</h2>
+<p>
+The coherence-based approach provides structural change detection rather than purely spectral analysis. Unlike optical burn indices, SAR coherence captures geometric and volumetric changes caused by vegetation loss. This makes the method particularly useful during active fire conditions.
+<br>Limitations include sensitivity to soil moisture changes and geometric distortions in steep terrain. Future research may integrate polarimetric SAR features and machine learning approaches to enhance burn severity classification.
+</p>
+
+<h2>7. Conclusion</h2>
+<p>
+This study demonstrates the effectiveness of multi-temporal Sentinel-1 SAR coherence for mapping wildfire progression in Los Angeles during January 2025. The RGB coherence composite enables intuitive visualization of fire chronology. SAR-based coherence analysis represents a reliable and operational tool for wildfire monitoring and post-disaster assessment.</p>
+
+</div>
+
+<footer>
+© 2026 Yogesh Regmi | Remote Sensing Research
+</footer>
+
+</body>
+</html>
