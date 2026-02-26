@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kathmandu PS-InSAR Deformation Analysis</title>
+
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<header>
+    <h1>Persistent Scatterer InSAR-Based Deformation Analysis of Kathmandu Valley (2022–2025)</h1>
+    <p class="subtitle">A Multi-Temporal Radar Time-Series Investigation</p>
+    <p class="author">Yogesh Regmi | February 26, 2026</p>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="#intro">Introduction</a></li>
+        <li><a href="#theory">Theory</a></li>
+        <li><a href="#data">Data</a></li>
+        <li><a href="#method">Methodology</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#discussion">Discussion</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+    </ul>
+</nav>
+
+<main>
+<p style="text-align: justify; text-justify: inter-word;">Kathmandu Valley, located within the active Himalayan orogenic belt, experiences continuous crustal deformation due to the convergence between the Indian and Eurasian plates. In addition to tectonic forcing, rapid urbanization, groundwater extraction, and sediment compaction contribute to localized land subsidence. This report presents a comprehensive deformation analysis using Persistent Scatterer Interferometric Synthetic Aperture Radar (PS-InSAR) applied to a stack of 34 Sentinel-1 C-band Single Look Complex images acquired between March 2022 and August 2025. Processing was performed using the ENVI SARscape Persistent Scatterer workflow. The study estimates Line-of-Sight deformation velocities ranging from −23.03 mm/year to +25.96 mm/year. The results demonstrate the capability of multi-temporal InSAR techniques to detect millimeter-scale surface motion in dense urban environments and highlight their importance for infrastructure stability assessment and geohazard monitoring.</p>
+<section id="intro">
+    <br>
+<h2>1. Introduction</h2>
+<p style="text-align: justify; text-justify: inter-word;">
+Kathmandu Valley represents one of the most geodynamically sensitive urban regions in South Asia. Situated at the boundary of the Indian and Eurasian tectonic plates, the region is characterized by ongoing strain accumulation, uplift, and episodic seismic activity. Beyond tectonic influences, anthropogenic activities such as groundwater withdrawal and large-scale infrastructure development further modify surface stability. Accurate quantification of ground deformation is therefore essential for urban planning, disaster mitigation, and long-term sustainability.
+<br>Conventional geodetic monitoring techniques such as GNSS and leveling provide high accuracy but lack dense spatial coverage. Interferometric Synthetic Aperture Radar (InSAR) offers a satellite-based alternative capable of wide-area monitoring with millimeter-level sensitivity. Persistent Scatterer InSAR (PS-InSAR), a multi-temporal extension of classical InSAR, improves deformation estimation by isolating stable radar targets that maintain phase coherence over long temporal intervals.
+
+</p>
+</section>
+
+<section id="theory">
+<h2>2. Theoretical Framework</h2>
+<p style="text-align: justify; text-justify: inter-word;">Synthetic Aperture Radar (SAR) is an active microwave imaging system that transmits electromagnetic pulses and records the backscattered signal. Each SAR pixel contains both amplitude and phase information. While amplitude describes surface reflectivity, the phase encodes the two-way travel distance between the satellite and the target.
+The interferometric phase between two SAR acquisitions is computed through complex conjugate multiplication, producing an interferogram whose phase component can be modeled as:
+</p><div class="equation">
+φ_int = φ_def + φ_topo + φ_atm + φ_orb + φ_noise
+</div>
+<p style="text-align: justify; text-justify: inter-word;">where φ_def represents deformation phase, φ_topo corresponds to residual topographic effects, φ_atm denotes atmospheric delay, φ_orb accounts for orbital inaccuracies, and φ_noise represents decorrelation and thermal noise. The principal objective of PS-InSAR processing is to isolate φ_def from the composite phase signal.</p>
+<br>
+<p style="text-align: justify; text-justify: inter-word;">Surface displacement along the satellite Line-of-Sight (LOS) is derived from the unwrapped phase difference using the relationship:</p>
+
+<div class="equation">
+d_LOS = (λ / 4π) × Δφ
+</div>
+
+<p style="text-align: justify; text-justify: inter-word;">
+where λ is the radar wavelength (5.6 cm for Sentinel-1 C-band) and Δφ is the unwrapped phase difference. This formulation enables detection of sub-centimeter deformation under high-coherence conditions.
+<br>Persistent Scatterers are point-like targets exhibiting stable backscatter characteristics across time. Urban environments such as Kathmandu Valley provide abundant persistent scatterers in the form of building corners, metallic infrastructure, and exposed rock surfaces. By exploiting long temporal stacks, PS-InSAR reduces temporal decorrelation and enhances statistical robustness in deformation estimation.
+
+</p>
+
+</section>
+
+<section id="data">
+<h2>3. Data and Study Area</h2>
+<p style="text-align: justify; text-justify: inter-word;">
+This study utilizes 34 Sentinel-1 Interferometric Wide (IW) mode Single Look Complex images acquired in VV polarization. The dataset spans from March 1, 2022 to August 25, 2025. The multi-year temporal coverage is critical for separating linear deformation trends from atmospheric and stochastic components. Processing was conducted using ENVI SARscape's Persistent Scatterer module.
+</p>
+<div class="figure">
+    <img src="images/sa.png" alt="Study Area Map">
+    <p>Fig 1: Study Area Map</p>
+</div>
+</section>
+
+<section id="method">
+<h2>4. Methodology</h2>
+<p style="text-align: justify; text-justify: inter-word;">The workflow begins with the construction of a connection graph defining the interferometric network topology. A master scene is selected to minimize temporal and perpendicular baselines relative to other acquisitions.</p>
+<div class="figure">
+    <img src="images/fig1.png" alt="PS connection graph">
+    <p>Fig 1: PS connection graph</p>
+</div>
+
+<div class="figure">
+    <div class="subplot-row">
+    <div class="subplot">
+        <img src="images/Picture2.png" alt="Time baseline plot">
+        <p>Fig 2a: Time Baseline Plot</p>
+    </div>
+
+    <div class="subplot">
+        <img src="images/Picture2.1.png" alt="Time position plot">
+        <p>Fig 2b: Time Position Plot</p>
+    </div>
+</div>
+</div>
+<p style="text-align: justify; text-justify: inter-word;"> Each slave scene is then interferometrically combined with the master without multilooking to preserve spatial resolution. </p>
+   <div class="figure">
+    <div class="subplot-row">
+    <div class="subplot">
+        <img src="images/fig3.png" alt="Time baseline plot">
+        
+    </div>
+
+    <div class="subplot">
+        <img src="images/fig4.png" alt="Time position plot">
+        <p>Fig 3: Interferometric Processing Workflow</p>
+    </div>
+    
+</div>
+</div>
+<p style="text-align: justify; text-justify: inter-word;">The first inversion step estimates linear deformation velocity and residual topographic error (RTE) for each persistent scatterer candidate. Velocity search bounds were defined between −25 and +25 mm/year, while height corrections were estimated within ±70 meters. The optimal solution is determined by maximizing temporal coherence.</p>
+<div class="figure">
+    <img src="images/fig5.png" alt="First inversion parameters">
+    <p>Fig 4: First Inversion Parameters</p>
+</div>
+<p style="text-align: justify; text-justify: inter-word;">Atmospheric Phase Screen (APS) estimation is performed during the second inversion stage. The atmospheric signal is characterized by spatial correlation and temporal randomness. By applying spatial low-pass and temporal high-pass filtering to residual phase components, the APS is estimated and removed. A refined inversion subsequently reconstructs both linear and non-linear displacement components.</p>
+<div class="figure">
+    <div class="subplot-row">
+    <div class="subplot">
+        <img src="images/fig6.png" alt="Time baseline plot">
+        
+    </div>
+
+    <div class="subplot">
+        <img src="images/fig7.png" alt="Time position plot">
+        <p>Fig 5: Second Inversion Step</p>
+    </div>
+
+    </div>
+<p style="text-align: justify; text-justify: inter-word;">Finally, geocoding transforms radar geometry coordinates into geographic coordinates using precise orbit metadata and Range-Doppler equations. The resulting geospatial dataset contains deformation velocity, cumulative displacement, and height correction for each persistent scatterer.</p>
+<div class="figure">
+    <img src="images/image11.png" alt="First inversion parameters">
+    <p>Fig 6: Final Geocoded PS Output</p>
+</div>
+</section>
+
+<section id="results">
+<h2>5. Results</h2>
+<p style="text-align: justify; text-justify: inter-word;">
+The deformation analysis reveals LOS velocity values ranging from −23.03 mm/year to +25.96 mm/year. Negative velocities correspond to motion away from the satellite, typically interpreted as subsidence, while positive velocities indicate uplift.
+
+</p>
+</section>
+
+<div class="figure">
+    <img src="images/fig8.png" alt="Displacement map">
+    <p>Fig 7: LOS Velocity Map of Kathmandu Valley</p>
+</div>
+
+<p style="text-align: justify; text-justify: inter-word;">
+Localized subsidence zones appear within urban sectors of Kathmandu Valley, potentially linked to groundwater extraction and sediment compaction. Several areas demonstrate near-zero velocities, indicating relative stability. Time-series displacement curves show both steady linear trends and seasonal oscillatory patterns, suggesting hydrological influences on deformation behavior.
+</p>
+
+</section>
+
+<section id="discussion">
+<h2>6. Discussion</h2>
+<p style="text-align: justify; text-justify: inter-word;">
+The integration of a multi-year Sentinel-1 dataset with the Persistent Scatterer approach demonstrates the capability of satellite radar time-series analysis to detect millimeter-scale ground motion in dense urban environments. However, InSAR measurements represent displacement only along the satellite Line-of-Sight. Full three-dimensional deformation characterization would require integration of ascending and descending orbit datasets.
+<br>Future research may incorporate GNSS validation, hydrological modeling, and combined SBAS-PS approaches to enhance interpretation robustness and improve geophysical understanding of deformation mechanisms within Kathmandu Valley.
+</p>
+</section>
+
+<section id="conclusion">
+<h2>7. Conclusion</h2>
+<p style="text-align: justify; text-justify: inter-word;">
+This study presents a comprehensive Persistent Scatterer InSAR deformation analysis of Kathmandu Valley between 2022 and 2025. Using 34 Sentinel-1 SAR acquisitions processed in ENVI SARscape, deformation velocities between −23 and +26 mm/year were identified. The results confirm that Kathmandu Valley exhibits measurable surface motion influenced by both tectonic and anthropogenic factors. Persistent Scatterer InSAR provides a powerful, cost-effective framework for continuous deformation monitoring in tectonically active and rapidly urbanizing regions.</p>
+</section>
+
+</main>
+
+<footer>
+<p>© 2026 Yogesh Regmi | GeoAI & Remote Sensing Research</p>
+</footer>
+
+<script src="script.js"></script>
+<style>
+/* Subplot Row */
+.subplot-row {
+    display: flex;
+    gap: 20px;
+    margin: 40px 0;
+}
+
+/* Each subplot */
+.subplot {
+    flex: 1;
+    text-align: center;
+}
+
+/* Image styling */
+.subplot img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* Caption */
+.subplot p {
+    font-size: 14px;
+    margin-top: 8px;
+    color: #555;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .subplot-row {
+        flex-direction: column;
+    }
+}
+</style>
+
+</body>
+</html>
