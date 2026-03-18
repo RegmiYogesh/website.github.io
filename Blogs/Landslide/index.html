@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landslide EWS — Kathmandu–Narayanghat Corridor</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --dark: #1A1208;
+    --earth: #5C3D1E;
+    --rust: #C4622D;
+    --amber: #E8943A;
+    --sage: #4A6741;
+    --slate: #2C3E50;
+    --mist: #E8EDF2;
+    --gold: #D4A843;
+    --alert-red: #C0392B;
+    --alert-orange: #E67E22;
+    --alert-green: #27AE60;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--dark);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: var(--dark);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 60% 40%, rgba(196,98,45,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 80% at 10% 70%, rgba(74,103,65,0.2) 0%, transparent 55%),
+      linear-gradient(160deg, #0d0a05 0%, #1a1208 40%, #0f1a0e 100%);
+  }
+
+  .topo-lines {
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 38px,
+      rgba(212,168,67,0.6) 38px,
+      rgba(212,168,67,0.6) 39px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 58px,
+      rgba(212,168,67,0.2) 58px,
+      rgba(212,168,67,0.2) 59px
+    );
+  }
+
+  /* Animated radar rings */
+  .radar {
+    position: absolute;
+    top: 18%;
+    right: 8%;
+    width: 320px;
+    height: 320px;
+    opacity: 0.15;
+  }
+  .radar-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--amber);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse 4s ease-out infinite;
+  }
+  .radar-ring:nth-child(1) { width: 60px; height: 60px; animation-delay: 0s; }
+  .radar-ring:nth-child(2) { width: 130px; height: 130px; animation-delay: 0.8s; }
+  .radar-ring:nth-child(3) { width: 200px; height: 200px; animation-delay: 1.6s; }
+  .radar-ring:nth-child(4) { width: 280px; height: 280px; animation-delay: 2.4s; }
+
+  @keyframes pulse {
+    0% { opacity: 0; transform: translate(-50%,-50%) scale(0.5); }
+    30% { opacity: 1; }
+    100% { opacity: 0; transform: translate(-50%,-50%) scale(1); }
+  }
+
+  .satellite {
+    position: absolute;
+    top: 12%;
+    right: 18%;
+    width: 14px; height: 14px;
+    background: var(--amber);
+    border-radius: 50%;
+    box-shadow: 0 0 20px var(--amber), 0 0 40px rgba(232,148,58,0.4);
+    animation: orbit 20s linear infinite;
+  }
+
+  @keyframes orbit {
+    from { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+  }
+
+  .hero-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--amber);
+    text-transform: uppercase;
+    padding: 0 3rem;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 7vw, 6rem);
+    font-weight: 900;
+    color: var(--cream);
+    line-height: 1.02;
+    padding: 0 3rem;
+    max-width: 900px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.5s forwards;
+  }
+
+  .hero-title span { color: var(--rust); }
+
+  .hero-meta {
+    display: flex;
+    gap: 3rem;
+    padding: 2rem 3rem 3rem;
+    border-top: 1px solid rgba(245,240,232,0.1);
+    margin-top: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.7s forwards;
+  }
+
+  .hero-meta-item { display: flex; flex-direction: column; gap: 0.3rem; }
+  .hero-meta-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    color: rgba(245,240,232,0.4);
+    text-transform: uppercase;
+  }
+  .hero-meta-value {
+    font-size: 0.95rem;
+    color: rgba(245,240,232,0.85);
+    font-weight: 400;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    right: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(245,240,232,0.3);
+    letter-spacing: 0.15em;
+    animation: fadeUp 1s ease 1.2s both;
+  }
+  .scroll-line {
+    width: 40px; height: 1px;
+    background: rgba(245,240,232,0.2);
+    animation: extend 2s ease-in-out infinite;
+  }
+  @keyframes extend {
+    0%,100% { width: 20px; }
+    50% { width: 50px; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(26,18,8,0.95);
+    backdrop-filter: blur(12px);
+    padding: 0 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(232,148,58,0.2);
+    height: 56px;
+  }
+  .nav-brand {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--amber);
+    letter-spacing: 0.12em;
+  }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(245,240,232,0.5);
+    text-decoration: none;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--amber); }
+
+  /* ── SECTIONS ── */
+  section { padding: 6rem 0; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 3rem; }
+
+  .section-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--rust);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rust);
+    opacity: 0.3;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 2rem;
+    color: var(--dark);
+  }
+
+  .lead-text {
+    font-size: 1.15rem;
+    line-height: 1.85;
+    color: #3a3020;
+    max-width: 720px;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ── INTRO ── */
+  .intro { background: var(--cream); }
+
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    margin-top: 3rem;
+  }
+
+  .stat-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    background: var(--dark);
+    padding: 1.8rem;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 3px;
+    background: var(--rust);
+  }
+  .stat-card.accent::before { background: var(--sage); }
+  .stat-card.accent2::before { background: var(--gold); }
+  .stat-card.accent3::before { background: var(--amber); }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(245,240,232,0.45);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.5;
+  }
+
+  /* ── PARTNERS RIBBON ── */
+  .partners {
+    background: var(--dark);
+    padding: 3rem 0;
+  }
+  .partners-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+    flex-wrap: wrap;
+  }
+  .partner-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(245,240,232,0.35);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .partner-name:hover { color: var(--amber); }
+  .partner-sep { color: rgba(232,148,58,0.3); font-size: 1.2rem; }
+
+  /* ── DATASETS ── */
+  .datasets { background: var(--mist); }
+
+  .datasets-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .dataset-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 2px;
+    border-top: 3px solid var(--rust);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .dataset-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  }
+  .dataset-card:nth-child(2) { border-top-color: var(--sage); }
+  .dataset-card:nth-child(3) { border-top-color: var(--gold); }
+
+  .dataset-icon {
+    width: 44px; height: 44px;
+    background: var(--cream);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 1.2rem;
+  }
+  .dataset-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    color: var(--dark);
+  }
+  .dataset-desc {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: #5a5040;
+  }
+  .dataset-tag {
+    display: inline-block;
+    margin-top: 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--rust);
+    border: 1px solid rgba(196,98,45,0.3);
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ── INSAR PROCESSING ── */
+  .processing { background: var(--cream); }
+
+  .processing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 3rem;
+    align-items: start;
+  }
+
+  .method-block {
+    padding: 2.5rem;
+    border-left: 3px solid var(--rust);
+    background: rgba(196,98,45,0.04);
+    margin-bottom: 1.5rem;
+  }
+  .method-block.sbas { border-left-color: var(--sage); background: rgba(74,103,65,0.04); }
+
+  .method-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    color: var(--dark);
+  }
+  .method-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    background: var(--rust);
+    color: white;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    display: inline-block;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+  .method-block.sbas .method-badge { background: var(--sage); }
+
+  /* Pipeline flow */
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .pipeline-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    padding: 1.2rem 0;
+    position: relative;
+  }
+  .pipeline-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 3rem;
+    bottom: 0;
+    width: 2px;
+    background: rgba(196,98,45,0.2);
+  }
+  .step-dot {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 2px solid var(--rust);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--rust);
+  }
+  .step-content {}
+  .step-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+    color: var(--dark);
+  }
+  .step-desc {
+    font-size: 0.85rem;
+    color: #5a5040;
+    line-height: 1.6;
+  }
+
+  /* ── SYSTEM ARCHITECTURE ── */
+  .architecture {
+    background: var(--dark);
+    color: var(--cream);
+  }
+  .architecture .section-title { color: var(--cream); }
+
+  .arch-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 3rem;
+    border: 1px solid rgba(245,240,232,0.08);
+  }
+
+  .arch-layer {
+    padding: 2rem 1.5rem;
+    border-right: 1px solid rgba(245,240,232,0.08);
+    position: relative;
+    transition: background 0.2s;
+  }
+  .arch-layer:last-child { border-right: none; }
+  .arch-layer:hover { background: rgba(245,240,232,0.03); }
+
+  .arch-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: rgba(245,240,232,0.05);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .arch-icon { font-size: 1.5rem; margin-bottom: 1rem; }
+  .arch-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .arch-desc {
+    font-size: 0.88rem;
+    color: rgba(245,240,232,0.55);
+    line-height: 1.7;
+  }
+  .arch-arrow {
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px; height: 28px;
+    background: var(--rust);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.7rem;
+    z-index: 1;
+  }
+  .arch-layer:last-child .arch-arrow { display: none; }
+
+  /* ── ALERT SYSTEM ── */
+  .alerts { background: var(--cream); }
+
+  .alert-tiers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .alert-tier {
+    padding: 2.5rem 2rem;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .alert-tier::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 4px;
+  }
+  .tier-watch { background: #FFF8F0; }
+  .tier-watch::before { background: var(--alert-orange); }
+  .tier-warning { background: #FFF5F5; }
+  .tier-warning::before { background: var(--alert-red); }
+  .tier-clear { background: #F0FFF4; }
+  .tier-clear::before { background: var(--alert-green); }
+
+  .tier-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .tier-watch .tier-label { color: var(--alert-orange); }
+  .tier-warning .tier-label { color: var(--alert-red); }
+  .tier-clear .tier-label { color: var(--alert-green); }
+
+  .tier-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    color: var(--dark);
+  }
+
+  .tier-conditions {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .tier-conditions li {
+    font-size: 0.88rem;
+    color: #3a3020;
+    padding-left: 1.2rem;
+    position: relative;
+    line-height: 1.5;
+  }
+  .tier-conditions li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+  }
+  .tier-watch .tier-conditions li::before { color: var(--alert-orange); }
+  .tier-warning .tier-conditions li::before { color: var(--alert-red); }
+  .tier-clear .tier-conditions li::before { color: var(--alert-green); }
+
+  /* Fusion diagram */
+  .fusion-diagram {
+    margin-top: 4rem;
+    padding: 3rem;
+    background: var(--dark);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .fusion-node {
+    background: rgba(245,240,232,0.06);
+    border: 1px solid rgba(245,240,232,0.12);
+    padding: 1.5rem 2rem;
+    border-radius: 4px;
+    text-align: center;
+    min-width: 140px;
+  }
+  .fusion-node-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .fusion-node-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(245,240,232,0.45);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .fusion-node-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    color: var(--cream);
+    margin-top: 0.3rem;
+  }
+  .fusion-plus {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: rgba(245,240,232,0.2);
+  }
+  .fusion-equals {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--rust);
+  }
+  .fusion-result {
+    background: var(--rust);
+    padding: 1.5rem 2rem;
+    border-radius: 4px;
+    text-align: center;
+    min-width: 160px;
+  }
+  .fusion-result .fusion-node-label { color: rgba(245,240,232,0.7); }
+  .fusion-result .fusion-node-value { color: white; font-size: 1.1rem; font-weight: 700; }
+
+  /* ── TIMELINE ── */
+  .timeline-section { background: var(--mist); }
+
+  .timeline {
+    margin-top: 3rem;
+    position: relative;
+    padding-left: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--rust), var(--sage));
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+    padding-left: 2.5rem;
+    animation: fadeLeft 0.5s ease both;
+  }
+  .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+  .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+  .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+  .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+  .timeline-item:nth-child(5) { animation-delay: 0.5s; }
+  .timeline-item:nth-child(6) { animation-delay: 0.6s; }
+
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(-16px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -2.8rem;
+    top: 0.3rem;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--rust);
+    border: 3px solid var(--mist);
+  }
+  .timeline-item:nth-child(4) .timeline-dot,
+  .timeline-item:nth-child(5) .timeline-dot,
+  .timeline-item:nth-child(6) .timeline-dot { background: var(--sage); }
+
+  .timeline-period {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--rust);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .timeline-item:nth-child(4) .timeline-period,
+  .timeline-item:nth-child(5) .timeline-period,
+  .timeline-item:nth-child(6) .timeline-period { color: var(--sage); }
+
+  .timeline-phase {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.6rem;
+  }
+  .timeline-desc {
+    font-size: 0.9rem;
+    color: #5a5040;
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  /* ── BUDGET ── */
+  .budget-section { background: var(--cream); }
+
+  .budget-table {
+    margin-top: 3rem;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .budget-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(26,18,8,0.4);
+    padding: 0 1rem 1rem 0;
+    text-align: left;
+    border-bottom: 1px solid rgba(26,18,8,0.1);
+  }
+  .budget-table td {
+    padding: 1.2rem 1rem 1.2rem 0;
+    border-bottom: 1px solid rgba(26,18,8,0.06);
+    font-size: 0.9rem;
+    color: #3a3020;
+    line-height: 1.6;
+    vertical-align: top;
+  }
+  .budget-table tr:hover td { background: rgba(196,98,45,0.03); }
+  .budget-table td:first-child {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--dark);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark);
+    padding: 4rem 3rem;
+    color: rgba(245,240,232,0.4);
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .footer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--cream);
+    margin-bottom: 0.8rem;
+  }
+  .footer-desc {
+    font-size: 0.88rem;
+    line-height: 1.8;
+    color: rgba(245,240,232,0.4);
+  }
+  .footer-refs h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 1.2rem;
+  }
+  .footer-refs ol {
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .footer-refs li {
+    font-size: 0.78rem;
+    color: rgba(245,240,232,0.3);
+    line-height: 1.5;
+  }
+  .footer-refs a {
+    color: rgba(232,148,58,0.5);
+    text-decoration: none;
+  }
+  .footer-refs a:hover { color: var(--amber); }
+  .footer-bottom {
+    max-width: 1100px;
+    margin: 3rem auto 0;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(245,240,232,0.06);
+    display: flex;
+    justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: rgba(245,240,232,0.2);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .hero-title { font-size: 2.4rem; padding: 0 1.5rem; }
+    .hero-label { padding: 0 1.5rem; }
+    .hero-meta { padding: 1.5rem; gap: 1.5rem; flex-wrap: wrap; }
+    .container { padding: 0 1.5rem; }
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    .intro-grid, .processing-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .datasets-grid { grid-template-columns: 1fr; }
+    .arch-grid { grid-template-columns: 1fr 1fr; }
+    .alert-tiers { grid-template-columns: 1fr; }
+    .stat-cards { grid-template-columns: 1fr 1fr; }
+    .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .fusion-diagram { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="topo-lines"></div>
+  <div class="radar">
+    <div class="radar-ring"></div>
+    <div class="radar-ring"></div>
+    <div class="radar-ring"></div>
+    <div class="radar-ring"></div>
+  </div>
+  <div class="satellite"></div>
+
+  <p class="hero-label">Research Project · Geospatial Early Warning Systems</p>
+  <h1 class="hero-title">Landslide Early<br>Warning System<br><span>Kathmandu–Narayanghat</span><br>Corridor</h1>
+
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Technology</span>
+      <span class="hero-meta-value">Sentinel-1 InSAR + DHM Rainfall</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Partners</span>
+      <span class="hero-meta-value">UniSC · NDRRMA · APAC Geospatial</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Duration</span>
+      <span class="hero-meta-value">2-Year Implementation</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Coverage</span>
+      <span class="hero-meta-value">Nepal's Critical Western Highway</span>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    scroll to explore
+  </div>
+</section>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-brand">LEWS · KTM–NGT</span>
+  <div class="nav-links">
+    <a href="#intro">Overview</a>
+    <a href="#datasets">Data</a>
+    <a href="#processing">InSAR</a>
+    <a href="#architecture">System</a>
+    <a href="#alerts">Alerts</a>
+    <a href="#timeline">Timeline</a>
+  </div>
+</nav>
+
+<!-- INTRO -->
+<section class="intro" id="intro">
+  <div class="container">
+    <p class="section-eyebrow">Introduction</p>
+    <h2 class="section-title">Nepal's lifeline highway,<br>made safer by satellite</h2>
+
+    <div class="intro-grid">
+      <div>
+        <p class="lead-text">
+          The steep, monsoon-prone highway between Narayanghat and Kathmandu is a critical transport link — the only route connecting western Nepal and Terai to the capital. Yet it suffers frequent, devastating landslide disruptions every monsoon season.
+        </p>
+        <p class="lead-text">
+          In collaboration with the University of the Sunshine Coast (Australia), Nepal's NDRRMA, and a Nepalese geospatial partner, we propose an automated system that fuses Sentinel-1 InSAR ground displacement data with DHM rainfall forecasts to trigger timely, actionable landslide alerts.
+        </p>
+      </div>
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div class="stat-num">9×</div>
+          <div class="stat-label">Highway closures<br>in summer 2023</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-num">6d</div>
+          <div class="stat-label">Sentinel-1<br>revisit cycle</div>
+        </div>
+        <div class="stat-card accent2">
+          <div class="stat-num">24h</div>
+          <div class="stat-label">Target data<br>processing latency</div>
+        </div>
+        <div class="stat-card accent3">
+          <div class="stat-num">2yr</div>
+          <div class="stat-label">Implementation<br>timeline</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<div class="partners">
+  <div class="partners-inner">
+    <span class="partner-name">University of the Sunshine Coast</span>
+    <span class="partner-sep">·</span>
+    <span class="partner-name">NDRRMA Nepal</span>
+    <span class="partner-sep">·</span>
+    <span class="partner-name">APAC Geospatial Nepal</span>
+    <span class="partner-sep">·</span>
+    <span class="partner-name">DHM Nepal</span>
+    <span class="partner-sep">·</span>
+    <span class="partner-name">ESA Copernicus</span>
+    <span class="partner-sep">·</span>
+    <span class="partner-name">SARscape / ENVI</span>
+  </div>
+</div>
+
+<!-- DATASETS -->
+<section class="datasets" id="datasets">
+  <div class="container">
+    <p class="section-eyebrow">Data Sources</p>
+    <h2 class="section-title">Multi-source data fusion<br>for robust monitoring</h2>
+    <p class="lead-text">The system ingests complementary datasets that together provide both the geophysical signal of ground movement and the meteorological trigger of rainfall.</p>
+
+    <div class="datasets-grid">
+      <div class="dataset-card">
+        <div class="dataset-icon">🛰</div>
+        <div class="dataset-title">Sentinel-1 SAR</div>
+        <div class="dataset-desc">Free, all-weather C-band synthetic aperture radar data from ESA delivering global coverage every 6 days with 24-hour data latency — ideal for deformation monitoring across all weather conditions.</div>
+        <span class="dataset-tag">C-Band · 6-Day Repeat · Free Access</span>
+      </div>
+      <div class="dataset-card">
+        <div class="dataset-icon">🌧</div>
+        <div class="dataset-title">DHM Rainfall Forecasts</div>
+        <div class="dataset-desc">Daily rainfall data and 24–48h forecast accumulations from Nepal's Department of Hydrology and Meteorology. DHM already issues landslide warnings when upstream rainfall exceeds critical thresholds.</div>
+        <span class="dataset-tag">24–48h Forecasts · API Access</span>
+      </div>
+      <div class="dataset-card">
+        <div class="dataset-icon">🗺</div>
+        <div class="dataset-title">GIS Base Layers</div>
+        <div class="dataset-desc">Detailed road-network shapefile for the Narayanghat–Kathmandu highway corridor, InSAR-derived displacement rasters, digital elevation model, and a local landslide inventory for hotspot identification.</div>
+        <span class="dataset-tag">DEM · Road Network · Inventory</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESSING -->
+<section class="processing" id="processing">
+  <div class="container">
+    <p class="section-eyebrow">InSAR Processing</p>
+    <h2 class="section-title">PS-InSAR &amp; SBAS:<br>two complementary lenses</h2>
+
+    <div class="processing-grid">
+      <div>
+        <div class="method-block">
+          <div class="method-badge">PS-InSAR</div>
+          <div class="method-title">Persistent Scatterer</div>
+          <p style="font-size:0.9rem;line-height:1.7;color:#5a5040;">Uses a single "master" image to identify stable radar reflectors — excelling in areas like road surfaces and rock outcrops with little temporal decorrelation. Produces highly accurate point-based displacement time series.</p>
+        </div>
+        <div class="method-block sbas">
+          <div class="method-badge">SBAS</div>
+          <div class="method-title">Small-Baseline Subset</div>
+          <p style="font-size:0.9rem;line-height:1.7;color:#5a5040;">Uses many short-baseline interferograms to maximize spatial coverage, especially effective in natural terrain with vegetation cover. Complements PS-InSAR for a complete deformation picture.</p>
+        </div>
+        <p style="font-size:0.85rem;color:#7a6050;margin-top:1rem;font-style:italic;">Both methods tested in SARscape's InSAR toolbox with parallel/GPU execution targeting ~24h processing latency.</p>
+      </div>
+      <div>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--rust);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1.5rem;">Processing Pipeline</p>
+        <div class="pipeline">
+          <div class="pipeline-step">
+            <div class="step-dot">01</div>
+            <div class="step-content">
+              <div class="step-name">Data Ingestion</div>
+              <div class="step-desc">Sentinel-1 scenes downloaded daily from ESA; orbit correction and radiometric calibration applied automatically.</div>
+            </div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-dot">02</div>
+            <div class="step-content">
+              <div class="step-name">Coregistration</div>
+              <div class="step-desc">All scenes coregistered to a common reference. Connection graph built for SBAS network.</div>
+            </div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-dot">03</div>
+            <div class="step-content">
+              <div class="step-name">Interferogram Formation</div>
+              <div class="step-desc">Differential interferograms computed; unwrapping performed to extract phase displacement signals.</div>
+            </div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-dot">04</div>
+            <div class="step-content">
+              <div class="step-name">Inversion &amp; Time Series</div>
+              <div class="step-desc">PS and SBAS inversion chains run in sliding-window mode; displacement vs. time extracted at key highway points.</div>
+            </div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-dot">05</div>
+            <div class="step-content">
+              <div class="step-name">Geocoding to Highway</div>
+              <div class="step-desc">All outputs geocoded to WGS-84; LOS motion converted to vertical/slope-normal using local DEM for road segment mapping.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="architecture" id="architecture">
+  <div class="container">
+    <p class="section-eyebrow" style="color:rgba(232,148,58,0.7);">System Architecture</p>
+    <h2 class="section-title">End-to-end automated<br>monitoring infrastructure</h2>
+
+    <div class="arch-grid">
+      <div class="arch-layer">
+        <div class="arch-num">01</div>
+        <div class="arch-icon">🛰</div>
+        <div class="arch-title">Data Ingestion</div>
+        <div class="arch-desc">Sentinel-1 scenes auto-downloaded from ESA daily. DHM rainfall forecasts retrieved via API. Pre-processing applied in SARscape.</div>
+        <div class="arch-arrow">→</div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-num">02</div>
+        <div class="arch-icon">⚙️</div>
+        <div class="arch-title">Processing</div>
+        <div class="arch-desc">PS and SBAS chains execute automatically. Parallel GPU execution. Evolving stack: new image in, oldest out, reprocessed continuously.</div>
+        <div class="arch-arrow">→</div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-num">03</div>
+        <div class="arch-icon">⚡</div>
+        <div class="arch-title">Risk Fusion</div>
+        <div class="arch-desc">SAR displacement rates combined with rainfall accumulations. Anomaly detection against baseline. Multi-tier alert scoring applied.</div>
+        <div class="arch-arrow">→</div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-num">04</div>
+        <div class="arch-icon">🗺</div>
+        <div class="arch-title">Web GIS Dashboard</div>
+        <div class="arch-desc">NDRRMA and local DRR officers view road segments colored by InSAR velocity, rainfall warnings, and risk levels in real time.</div>
+      </div>
+    </div>
+
+    <p style="margin-top:2rem;font-size:0.85rem;color:rgba(245,240,232,0.35);font-style:italic;">
+      Architecture follows precedent systems including a Hungarian national EWS that automated monthly Sentinel-1 processing and delivered near-real-time warnings via dedicated web UI.
+    </p>
+  </div>
+</section>
+
+<!-- ALERTS -->
+<section class="alerts" id="alerts">
+  <div class="container">
+    <p class="section-eyebrow">Alert Criteria</p>
+    <h2 class="section-title">Risk fusion &amp; multi-tier<br>warning thresholds</h2>
+    <p class="lead-text">Empirical thresholds calibrated from historical monsoon data. Inspired by Umbria (Italy) studies where 48h rainfall and soil saturation closely matched InSAR-detected accelerations.</p>
+
+    <div class="alert-tiers">
+      <div class="alert-tier tier-clear">
+        <div class="tier-label">Level 0</div>
+        <div class="tier-name">All Clear</div>
+        <ul class="tier-conditions">
+          <li>InSAR velocity within baseline bounds</li>
+          <li>No significant rainfall forecast</li>
+          <li>Highway monitoring continues passively</li>
+        </ul>
+      </div>
+      <div class="alert-tier tier-watch">
+        <div class="tier-label">Level 1 — Watch</div>
+        <div class="tier-name">Elevated Risk</div>
+        <ul class="tier-conditions">
+          <li>Either heavy rainfall OR moderate ground creep detected</li>
+          <li>DHM forecast exceeds preliminary threshold</li>
+          <li>Heightened monitoring frequency</li>
+          <li>Authorities placed on standby</li>
+        </ul>
+      </div>
+      <div class="alert-tier tier-warning">
+        <div class="tier-label">Level 2 — Warning</div>
+        <div class="tier-name">Imminent Hazard</div>
+        <ul class="tier-conditions">
+          <li>Both InSAR motion AND rainfall thresholds exceeded simultaneously</li>
+          <li>48h rainfall forecast above DHM critical value</li>
+          <li>Recent InSAR velocity anomaly confirmed</li>
+          <li>Evacuation warnings issued to authorities</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="fusion-diagram">
+      <div class="fusion-node">
+        <div class="fusion-node-icon">📡</div>
+        <div class="fusion-node-label">InSAR Signal</div>
+        <div class="fusion-node-value">Displacement Rate<br>vs Baseline</div>
+      </div>
+      <div class="fusion-plus">+</div>
+      <div class="fusion-node">
+        <div class="fusion-node-icon">🌧</div>
+        <div class="fusion-node-label">DHM Forecast</div>
+        <div class="fusion-node-value">48h Rainfall<br>Accumulation</div>
+      </div>
+      <div class="fusion-equals">=</div>
+      <div class="fusion-result">
+        <div class="fusion-node-icon">⚠️</div>
+        <div class="fusion-node-label">Combined Alert</div>
+        <div class="fusion-node-value">Landslide<br>Warning Issued</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="timeline-section" id="timeline">
+  <div class="container">
+    <p class="section-eyebrow">Implementation Plan</p>
+    <h2 class="section-title">Two-year phased<br>rollout</h2>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">Months 1–3</div>
+        <div class="timeline-phase">Planning &amp; Setup</div>
+        <div class="timeline-desc">Stakeholder alignment with NDRRMA and District DRR committees. Data agreements with ESA and DHM. Server infrastructure procurement. SARscape license setup.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">Months 4–6</div>
+        <div class="timeline-phase">Pipeline Development</div>
+        <div class="timeline-desc">InSAR processing chains (PS and SBAS) built and tested on historical Sentinel-1 archive over the corridor. Baseline displacement established.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">Months 7–9</div>
+        <div class="timeline-phase">Dashboard Prototype</div>
+        <div class="timeline-desc">Web GIS interface developed. Highway segments mapped with InSAR velocity overlays. Rainfall integration and alert threshold testing begins.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">Months 10–12</div>
+        <div class="timeline-phase">Pilot Testing</div>
+        <div class="timeline-desc">Live system tested through a full monsoon season. Back-testing against 2023 landslide events. Thresholds iteratively refined.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">Months 13–18</div>
+        <div class="timeline-phase">System Refinement</div>
+        <div class="timeline-desc">Alert criteria calibrated from pilot results. GPU pipeline optimized. Field validation in Nepal. Stakeholder feedback incorporated.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">Months 19–24</div>
+        <div class="timeline-phase">Training &amp; Handover</div>
+        <div class="timeline-desc">Capacity building workshops for NDRRMA and local DRR officers. Full operational handover. Documentation and knowledge transfer completed.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUDGET -->
+<section class="budget-section" id="budget">
+  <div class="container">
+    <p class="section-eyebrow">Budget Summary</p>
+    <h2 class="section-title">2-year estimate (USD)</h2>
+
+    <table class="budget-table">
+      <thead>
+        <tr>
+          <th style="width:20%">Category</th>
+          <th style="width:80%">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Personnel</td>
+          <td>Two full-time research staff (PI + postdoc or two specialists) for SAR/InSAR development, system integration, and stakeholder coordination throughout the project period.</td>
+        </tr>
+        <tr>
+          <td>Equipment</td>
+          <td>Dedicated processing hardware — workstations or servers with GPUs for SARscape automated pipeline execution — plus adequate storage for SAR data archives.</td>
+        </tr>
+        <tr>
+          <td>Software</td>
+          <td>SARscape/ENVI SARscape licenses (if not already provided by partner), GIS tools, and any ancillary processing software required.</td>
+        </tr>
+        <tr>
+          <td>Travel &amp; Workshops</td>
+          <td>Field visits to Nepal for ground validation, stakeholder engagement, and capacity-building training workshops for NDRRMA and District DRR committees.</td>
+        </tr>
+        <tr>
+          <td>Overhead &amp; Misc</td>
+          <td>Institutional overhead, data acquisition costs where applicable, and contingency reserve for unforeseen project expenses.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-title">Landslide EWS<br>Kathmandu–Narayanghat</div>
+      <p class="footer-desc" style="margin-top:1rem;">
+        A collaborative research initiative combining satellite InSAR deformation monitoring with meteorological forecasting to protect Nepal's most critical highway corridor. Aligned with NDRRMA's mandate and Sendai Framework goals for multi-hazard early warning systems.
+      </p>
+    </div>
+    <div class="footer-refs">
+      <h4>Key References</h4>
+      <ol>
+        <li>Nepjol: Narayanghat-Kathmandu highway landslide disruption analysis — <a href="https://www.nepjol.info/index.php/rupantaran/article/download/73505/56266/213358" target="_blank">nepjol.info</a></li>
+        <li>ScienceDirect: Challenges in Nepal's early warning communication — <a href="https://www.sciencedirect.com/science/article/abs/pii/S2212420925001426" target="_blank">sciencedirect.com</a></li>
+        <li>Practical Action: NDRRMA operational frameworks — <a href="https://infohub.practicalaction.org" target="_blank">practicalaction.org</a></li>
+        <li>ScienceDirect: InSAR innovation for large landslide early warning — <a href="https://www.sciencedirect.com/science/article/abs/pii/S0013795224003715" target="_blank">sciencedirect.com</a></li>
+      </ol>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>APAC Geospatial Nepal · University of the Sunshine Coast · NDRRMA</span>
+    <span>Kathmandu–Narayanghat Corridor · Nepal</span>
+  </div>
+</footer>
+
+</body>
+</html>
